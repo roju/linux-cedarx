@@ -99,3 +99,45 @@
 	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
+
+&csi0 {
+    status = "okay";
+    allwinner,mipi-csi-bps = <400000000>;
+    port {
+        csi0_ep: endpoint {
+            remote-endpoint = <&ov5640_0>;
+            clock-lanes = <0>;
+            data-lanes = <1 2>;
+        };
+    };
+};
+
+&i2c1 {
+    status = "okay";
+    ov5640: camera@3c {
+        compatible = "ovti,ov5640";
+        reg = <0x3c>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&csi0_mclk>;
+        clocks = <&ccu CLK_CSI0_MCLK>;
+        clock-names = "xclk";
+        assigned-clocks = <&ccu CLK_CSI0_MCLK>;
+        assigned-clock-rates = <24000000>;
+        powerdown-gpios = <&pio 4 19 GPIO_ACTIVE_HIGH>;
+        reset-gpios = <&pio 4 18 GPIO_ACTIVE_LOW>;
+        port {
+            ov5640_0: endpoint {
+                remote-endpoint = <&csi0_ep>;
+                clock-lanes = <0>;
+                data-lanes = <1 2>;
+            };
+        };
+    };
+};
+
+&pio {
+    csi0_mclk: csi0-mclk@0 {
+        pins = "PE20";
+        function = "csi_mipi";
+    };
+};

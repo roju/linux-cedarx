@@ -13,5 +13,6 @@ if VIDEO_SUNXI
 
 source "drivers/staging/media/sunxi/cedrus/Kconfig"
 source "drivers/staging/media/sunxi/cedar/Kconfig"
+source "drivers/staging/media/sunxi/sun6i-csi/Kconfig"
 
 endif
