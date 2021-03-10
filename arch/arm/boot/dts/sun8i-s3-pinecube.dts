@@ -78,12 +78,6 @@
 	};
 };
 
-&emac {
-	phy-handle = <&int_mii_phy>;
-	phy-mode = "mii";
-	status = "okay";
-};
-
 &i2c0 {
 	status = "okay";
 
