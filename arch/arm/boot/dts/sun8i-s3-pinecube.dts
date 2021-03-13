@@ -41,6 +41,22 @@
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 	};
+
+	reg_vcc_wifi: vcc-wifi {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc-wifi";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&pio 1 2 GPIO_ACTIVE_LOW>; /* PB2 WIFI-EN */
+		vin-supply = <&reg_dcdc3>;
+		startup-delay-us = <200000>;
+	};
+
+	wifi_pwrseq: wifi_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&pio 1 3 GPIO_ACTIVE_LOW>; /* PB3 WIFI-RST */
+		post-power-on-delay-ms = <200>;
+	};
 };
 
 &mmc0 {
@@ -78,10 +94,12 @@
 };
 
 &mmc1 {
-	broken-cd;
+	vmmc-supply = <&reg_vcc_wifi>;
+	vqmmc-supply = <&reg_dcdc3>;
+	mmc-pwrseq = <&wifi_pwrseq>;
 	bus-width = <4>;
-	vmmc-supply = <&reg_vcc3v3>;
-	status = "disabled";
+	non-removable;
+	status = "okay";
 };
 
 &lradc {
